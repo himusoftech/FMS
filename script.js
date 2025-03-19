@@ -1,6 +1,6 @@
 async function fetchFeedback() {
     try {
-        let response = await fetch("https://script.google.com/macros/s/YOUR_UPDATED_DEPLOYMENT_ID/exec");
+        let response = await fetch("https://script.google.com/macros/s/AKfycby1yrnBkSJST2HtBQUzool4XDOaA3m4rOp2bvd0XnzvxmLpDB7a-Fx3S0tVLeWerjoY/exec");
         if (!response.ok) throw new Error("Network response was not ok");
         
         let data = await response.json();
