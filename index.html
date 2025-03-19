@@ -8,5 +8,24 @@
 <body>
     <h1>Temple Feedback Dashboard</h1>
     <p>GitHub Pages is now working!</p>
+    <script>
+document.addEventListener("DOMContentLoaded", function () {
+    console.log("✅ Page Loaded!");
+
+    let tableBody = document.getElementById("feedbackContainer");
+    if (!tableBody) {
+        console.error("❌ Table container not found.");
+        return;
+    }
+
+    tableBody.innerHTML = `<tr>
+        <td>FB-12345</td>
+        <td>2025-03-18 12:34:56</td>
+        <td>Test User</td>
+        <td>9876543210</td>
+        <td>Test Feedback</td>
+        <td>Pending</td>
+        <td><button onclick="alert('Resolve clicked')">Resolve</button></td>
+    </tr>`;
 </body>
 </html>
