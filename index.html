@@ -8,24 +8,49 @@
 <body>
     <h1>Temple Feedback Dashboard</h1>
     <p>GitHub Pages is now working!</p>
+
+    <!-- ✅ Add the table structure -->
+    <table border="1" width="100%" style="border-collapse: collapse;">
+        <thead>
+            <tr>
+                <th>Unique ID</th>
+                <th>Timestamp</th>
+                <th>Name</th>
+                <th>Mobile</th>
+                <th>Feedback</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="feedbackContainer"> 
+            <!-- Data will be inserted here -->
+        </tbody>
+    </table>
+
     <script>
-document.addEventListener("DOMContentLoaded", function () {
-    console.log("✅ Page Loaded!");
+    document.addEventListener("DOMContentLoaded", function () {
+        console.log("✅ Page Loaded!");
 
-    let tableBody = document.getElementById("feedbackContainer");
-    if (!tableBody) {
-        console.error("❌ Table container not found.");
-        return;
-    }
+        let tableBody = document.getElementById("feedbackContainer");
+        if (!tableBody) {
+            console.error("❌ Table container not found.");
+            return;
+        }
 
-    tableBody.innerHTML = `<tr>
-        <td>FB-12345</td>
-        <td>2025-03-18 12:34:56</td>
-        <td>Test User</td>
-        <td>9876543210</td>
-        <td>Test Feedback</td>
-        <td>Pending</td>
-        <td><button onclick="alert('Resolve clicked')">Resolve</button></td>
-    </tr>`;
+        // ✅ Insert dummy data
+        tableBody.innerHTML = `<tr>
+            <td>FB-12345</td>
+            <td>2025-03-18 12:34:56</td>
+            <td>Test User</td>
+            <td>9876543210</td>
+            <td>Test Feedback</td>
+            <td>Pending</td>
+            <td><button onclick="alert('Resolve clicked')">Resolve</button></td>
+        </tr>`;
+
+        console.log("✅ Dummy data inserted into table.");
+    });
+    </script>
 </body>
 </html>
+
