@@ -1,79 +1,50 @@
-async function fetchFeedback() {
+document.addEventListener("DOMContentLoaded", function () {
     console.log("🔄 Fetching feedback data...");
 
-    try {
-        let response = await fetch("https://script.google.com/macros/s/AKfycby1yrnBkSJST2HtBQUzool4XDOaA3m4rOp2bvd0XnzvxmLpDB7a-Fx3S0tVLeWerjoY/exec");
-        let data = await response.json();
+    async function fetchFeedback() {
+        try {
+            let response = await fetch("https://script.google.com/macros/s/AKfycby1yrnBkSJST2HtBQUzool4XDOaA3m4rOp2bvd0XnzvxmLpDB7a-Fx3S0tVLeWerjoY/exec");
+            console.log("📩 API Response Status:", response.status);
 
-        let tableBody = document.getElementById("feedbackContainer");
-        if (!tableBody) {
-            console.error("❌ Table container missing.");
-            return;
-        }
+            let data = await response.json();
+            console.log("✅ Data received:", data);
 
-        if (!Array.isArray(data)) {
-            console.error("❌ Data format issue:", data);
-            tableBody.innerHTML = "<tr><td colspan='7'>⚠️ No valid data found.</td></tr>";
-            return;
-        }
+            let tableBody = document.getElementById("feedbackContainer");
+            if (!tableBody) {
+                console.error("❌ Table container missing.");
+                return;
+            }
 
-        // Populate table
-        let tableHTML = "";
-        data.forEach(row => {
-            tableHTML += `<tr>
-                <td>${row.uniqueID || "N/A"}</td>
-                <td>${row.timestamp || "N/A"}</td>
-                <td>${row.name || "N/A"}</td>
-                <td>${row.mobile || "N/A"}</td>
-                <td>${row.feedback || "N/A"}</td>
-                <td class="status">${row.status || "N/A"}</td>
-                <td><button class="resolveBtn" data-id="${row.uniqueID}">Resolve</button></td>
-            </tr>`;
-        });
+            if (!Array.isArray(data)) {
+                console.error("❌ Invalid data format:", data);
+                tableBody.innerHTML = "<tr><td colspan='7'>⚠️ No valid data found.</td></tr>";
+                return;
+            }
 
-        tableBody.innerHTML = tableHTML;
-
-        // Initialize DataTables for sorting and filtering
-        $("#feedbackTable").DataTable();
-
-        // Attach event listeners to resolve buttons
-        document.querySelectorAll(".resolveBtn").forEach(button => {
-            button.addEventListener("click", function () {
-                let uniqueID = this.getAttribute("data-id");
-                updateStatus(uniqueID, "Resolved", this);
+            let tableHTML = "";
+            data.forEach(row => {
+                tableHTML += `<tr>
+                    <td>${row.uniqueID || "N/A"}</td>
+                    <td>${row.timestamp || "N/A"}</td>
+                    <td>${row.name || "N/A"}</td>
+                    <td>${row.mobile || "N/A"}</td>
+                    <td>${row.feedback || "N/A"}</td>
+                    <td>${row.status || "N/A"}</td>
+                    <td><button onclick="updateStatus('${row.uniqueID}', 'Resolved')">Resolve</button></td>
+                </tr>`;
             });
-        });
 
-        console.log("✅ Table updated successfully.");
-    } catch (error) {
-        console.error("❌ Error fetching data:", error);
-        document.getElementById("feedbackContainer").innerHTML = "<tr><td colspan='7'>⚠️ Failed to load data.</td></tr>";
-    }
-}
+            tableBody.innerHTML = tableHTML;
+            console.log("✅ Table updated successfully.");
 
-async function updateStatus(uniqueID, newStatus, buttonElement) {
-    console.log(`🔄 Updating status for ${uniqueID}...`);
-
-    try {
-        let response = await fetch("https://script.google.com/macros/s/AKfycby1yrnBkSJST2HtBQUzool4XDOaA3m4rOp2bvd0XnzvxmLpDB7a-Fx3S0tVLeWerjoY/exec", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ uniqueID, status: newStatus })
-        });
-
-        let result = await response.json();
-        if (result.success) {
-            console.log(`✅ Status updated for ${uniqueID}`);
-            buttonElement.closest("tr").querySelector(".status").textContent = newStatus;
-            buttonElement.disabled = true;
-            buttonElement.textContent = "Resolved";
-        } else {
-            console.error("❌ Failed to update status:", result.message);
+            // Initialize DataTable after loading data
+            $('#feedbackTable').DataTable();
+        } catch (error) {
+            console.error("❌ Error fetching data:", error);
+            document.getElementById("feedbackContainer").innerHTML = "<tr><td colspan='7'>⚠️ Failed to load data.</td></tr>";
         }
-    } catch (error) {
-        console.error("❌ Error updating status:", error);
     }
-}
 
-// Run fetchFeedback on page load
-document.addEventListener("DOMContentLoaded", fetchFeedback);
+    fetchFeedback();
+});
+✅ Step 2: Verify index.html Includes script.js
