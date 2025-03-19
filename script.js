@@ -1,46 +1,31 @@
 async function fetchFeedback() {
-    console.log("🔄 Fetching live API data...");
+    console.log("🚀 Using Test Data (Ignoring API)");
 
-    try {
-        let response = await fetch("https://script.google.com/macros/s/AKfycby1yrnBkSJST2HtBQUzool4XDOaA3m4rOp2bvd0XnzvxmLpDB7a-Fx3S0tVLeWerjoY/exec");
-        console.log("📩 Response status:", response.status);
+    let testData = [
+        { "uniqueID": "FB-1001", "timestamp": "2025-03-18 15:09:00", "name": "Alice", "mobile": "9876543210", "feedback": "Test case 1", "status": "Pending" },
+        { "uniqueID": "FB-1002", "timestamp": "2025-03-18 17:58:20", "name": "Bob", "mobile": "8765432109", "feedback": "Test case 2", "status": "Resolved" }
+    ];
 
-        if (!response.ok) throw new Error("Server responded with status: " + response.status);
-        
-        let data = await response.json();
-        console.log("✅ Data received:", data);
-
-        let tableBody = document.getElementById("feedbackContainer");
-        if (!tableBody) {
-            console.error("❌ Table container not found!");
-            return;
-        }
-
-        if (!Array.isArray(data)) {
-            console.error("❌ Unexpected API response format:", data);
-            tableBody.innerHTML = "<tr><td colspan='7'>⚠️ Invalid data received.</td></tr>";
-            return;
-        }
-
-        let tableHTML = data.map(row => `
-            <tr>
-                <td>${row.uniqueID || "N/A"}</td>
-                <td>${row.timestamp || "N/A"}</td>
-                <td>${row.name || "N/A"}</td>
-                <td>${row.mobile ? row.mobile.toString() : "N/A"}</td>  <!-- Ensure mobile is treated as string -->
-                <td>${row.feedback || "N/A"}</td>
-                <td>${row.status || "N/A"}</td>
-                <td><button onclick="updateStatus('${row.uniqueID}', 'Resolved')">Resolve</button></td>
-            </tr>
-        `).join('');
-
-        tableBody.innerHTML = tableHTML;
-        console.log("✅ Table updated successfully.");
-    } catch (error) {
-        console.error("❌ Fetch error:", error);
-        document.getElementById("feedbackContainer").innerHTML = "<tr><td colspan='7'>⚠️ Failed to load data.</td></tr>";
+    let tableBody = document.getElementById("feedbackContainer");
+    if (!tableBody) {
+        console.error("❌ Table container not found!");
+        return;
     }
+
+    let tableHTML = testData.map(row => `
+        <tr>
+            <td>${row.uniqueID}</td>
+            <td>${row.timestamp}</td>
+            <td>${row.name}</td>
+            <td>${row.mobile}</td>
+            <td>${row.feedback}</td>
+            <td>${row.status}</td>
+            <td><button onclick="alert('Resolve ${row.uniqueID}')">Resolve</button></td>
+        </tr>
+    `).join('');
+
+    tableBody.innerHTML = tableHTML;
+    console.log("✅ Table updated successfully with test data.");
 }
 
-// Ensure the function runs when the page loads
 document.addEventListener("DOMContentLoaded", fetchFeedback);
