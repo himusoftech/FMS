@@ -1,78 +1,68 @@
+document.addEventListener("DOMContentLoaded", function () {
+    fetchFeedback();
+    document.getElementById("searchInput").addEventListener("input", filterTable);
+});
+
 async function fetchFeedback() {
-    console.log("🔄 Fetching feedback data...");
     try {
         let response = await fetch("https://script.google.com/macros/s/AKfycby1yrnBkSJST2HtBQUzool4XDOaA3m4rOp2bvd0XnzvxmLpDB7a-Fx3S0tVLeWerjoY/exec");
         let data = await response.json();
-        console.log("✅ Data received:", data);
-
         let tableBody = document.getElementById("feedbackContainer");
         tableBody.innerHTML = "";
-
-        if (!Array.isArray(data)) {
-            console.error("❌ Invalid data format:", data);
-            tableBody.innerHTML = "<tr><td colspan='7'>⚠️ No valid data found.</td></tr>";
-            return;
-        }
-
+        
         data.forEach(row => {
             let tr = document.createElement("tr");
-
             tr.innerHTML = `
-                <td>${row.uniqueID || "N/A"}</td>
-                <td>${row.timestamp || "N/A"}</td>
-                <td>${row.name || "N/A"}</td>
-                <td>${row.mobile || "N/A"}</td>
-                <td>${row.feedback || "N/A"}</td>
+                <td>${row.uniqueID}</td>
+                <td>${row.timestamp}</td>
+                <td>${row.name}</td>
+                <td>${row.mobile}</td>
+                <td>${row.feedback}</td>
                 <td>
-                    <select id="status-${row.uniqueID}">
+                    <select id="status-${row.uniqueID}" class="form-select">
                         <option value="Pending" ${row.status === "Pending" ? "selected" : ""}>Pending</option>
                         <option value="In Progress" ${row.status === "In Progress" ? "selected" : ""}>In Progress</option>
                         <option value="Resolved" ${row.status === "Resolved" ? "selected" : ""}>Resolved</option>
                     </select>
                 </td>
-                <td><button onclick="updateStatus('${row.uniqueID}')">Update</button></td>
+                <td>
+                    <button class="btn btn-primary" onclick="updateStatus('${row.uniqueID}')">Update</button>
+                </td>
             `;
-
             tableBody.appendChild(tr);
         });
-
-        $('#feedbackTable').DataTable(); // Initialize sorting & filtering
     } catch (error) {
-        console.error("❌ Error fetching data:", error);
+        console.error("Error fetching data:", error);
+        document.getElementById("feedbackContainer").innerHTML = "<tr><td colspan='7'>Failed to load data.</td></tr>";
     }
 }
 
 async function updateStatus(uniqueID) {
     let selectedStatus = document.getElementById(`status-${uniqueID}`).value;
-    console.log(`🔄 Updating status for ${uniqueID} to ${selectedStatus}...`);
-
     try {
         let response = await fetch("https://script.google.com/macros/s/AKfycby1yrnBkSJST2HtBQUzool4XDOaA3m4rOp2bvd0XnzvxmLpDB7a-Fx3S0tVLeWerjoY/exec", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ uniqueID: uniqueID, status: selectedStatus })
+            body: JSON.stringify({ uniqueID, status: selectedStatus })
         });
-
         let result = await response.json();
         if (result.success) {
-            alert(`✅ Feedback ${uniqueID} updated to ${selectedStatus}!`);
-            fetchFeedback(); // Refresh table
+            alert("Status updated successfully!");
+            fetchFeedback();
         } else {
-            alert(`❌ Update failed: ${result.message}`);
+            alert("Failed to update status. Try again.");
         }
     } catch (error) {
-        console.error("❌ Error updating status:", error);
+        console.error("Error updating status:", error);
+        alert("Error updating status.");
     }
 }
 
 function filterTable() {
-    let input = document.getElementById("search").value.toLowerCase();
+    let input = document.getElementById("searchInput").value.toLowerCase();
     let rows = document.querySelectorAll("#feedbackContainer tr");
-
     rows.forEach(row => {
         let text = row.innerText.toLowerCase();
         row.style.display = text.includes(input) ? "" : "none";
     });
 }
-
-document.addEventListener("DOMContentLoaded", fetchFeedback);
