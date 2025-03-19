@@ -1,6 +1,6 @@
 async function fetchFeedback() {
   try {
-    let response = await fetch("https://script.google.com/macros/s/YOUR_DEPLOYED_WEB_APP_URL/exec");
+    let response = await fetch("https://script.google.com/macros/s/AKfycby1yrnBkSJST2HtBQUzool4XDOaA3m4rOp2bvd0XnzvxmLpDB7a-Fx3S0tVLeWerjoY/exec");
     let data = await response.json();
 
     console.log("✅ Data Received:", data);
@@ -41,7 +41,7 @@ async function fetchFeedback() {
 
 // Function to update feedback status
 async function updateStatus(feedbackID, newStatus) {
-  let response = await fetch("https://script.google.com/macros/s/YOUR_DEPLOYED_WEB_APP_URL/exec", {
+  let response = await fetch("https://script.google.com/macros/s/AKfycby1yrnBkSJST2HtBQUzool4XDOaA3m4rOp2bvd0XnzvxmLpDB7a-Fx3S0tVLeWerjoY/exec", {
     method: "POST",
     body: JSON.stringify({ uniqueID: feedbackID, action: "updateStatus", status: newStatus }),
     headers: { "Content-Type": "application/json" }
