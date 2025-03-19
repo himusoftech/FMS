@@ -6,6 +6,27 @@
     <title>Feedback Dashboard</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <script defer src="FMS/script.js"></script>
+    <script>
+        function sortTable(columnIndex) {
+            let table = document.getElementById("feedbackContainer");
+            let rows = Array.from(table.getElementsByTagName("tr"));
+
+            let sortedRows = rows.sort((a, b) => {
+                let aText = a.cells[columnIndex]?.innerText.trim();
+                let bText = b.cells[columnIndex]?.innerText.trim();
+
+                // Handle date sorting
+                if (!isNaN(Date.parse(aText)) && !isNaN(Date.parse(bText))) {
+                    return new Date(aText) - new Date(bText);
+                }
+                return aText.localeCompare(bText);
+            });
+
+            // Remove old rows and append sorted rows
+            table.innerHTML = "";
+            sortedRows.forEach(row => table.appendChild(row));
+        }
+    </script>
 </head>
 <body>
     <div class="container mt-4">
@@ -14,12 +35,12 @@
         <table class="table table-bordered table-striped">
             <thead>
                 <tr class="table-success">
-                    <th>Unique ID</th>
-                    <th>Timestamp</th>
-                    <th>Name</th>
-                    <th>Mobile</th>
-                    <th>Feedback</th>
-                    <th>Status</th>
+                    <th onclick="sortTable(0)">Unique ID ⬍</th>
+                    <th onclick="sortTable(1)">Timestamp ⬍</th>
+                    <th onclick="sortTable(2)">Name ⬍</th>
+                    <th onclick="sortTable(3)">Mobile ⬍</th>
+                    <th onclick="sortTable(4)">Feedback ⬍</th>
+                    <th onclick="sortTable(5)">Status ⬍</th>
                     <th>Action</th>
                 </tr>
             </thead>
