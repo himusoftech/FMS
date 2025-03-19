@@ -1,10 +1,10 @@
 async function fetchFeedback() {
   try {
     console.log("🔄 Fetching feedback...");
-    
+
     let response = await fetch("https://script.google.com/macros/s/AKfycby1yrnBkSJST2HtBQUzool4XDOaA3m4rOp2bvd0XnzvxmLpDB7a-Fx3S0tVLeWerjoY/exec");
     console.log("📩 Response status:", response.status);
-    
+
     let data = await response.json();
     console.log("✅ Data Received:", data);
 
@@ -36,11 +36,11 @@ async function fetchFeedback() {
     });
 
     tableBody.innerHTML = tableHTML;
+    console.log("✅ Table updated successfully.");
   } catch (error) {
     console.error("❌ Error fetching data:", error);
     document.getElementById("feedbackContainer").innerHTML = "<tr><td colspan='7'>⚠️ Failed to load data.</td></tr>";
   }
 }
 
-
-window.onload = fetchFeedback;
+document.addEventListener("DOMContentLoaded", fetchFeedback);
