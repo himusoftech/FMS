@@ -37,16 +37,7 @@ async function fetchFeedback() {
     }
 }
 
-function fetchFeedback() {
-    console.log("Fetching feedback...");
-    fetch("https://script.google.com/macros/s/AKfycby1yrnBkSJST2HtBQUzool4XDOaA3m4rOp2bvd0XnzvxmLpDB7a-Fx3S0tVLeWerjoY/exec")
-    .then(response => response.json())
-    .then(data => {
-        console.log("Data received:", data);
-        // Code to display data in the table
-    })
-    .catch(error => console.error("Error fetching feedback:", error));
-}
+
 
 
 async function updateStatus(uniqueID) {
