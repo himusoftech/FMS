@@ -4,27 +4,55 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Feedback Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        input {
+            margin-bottom: 10px;
+            padding: 8px;
+            width: 100%;
+        }
+    </style>
 </head>
 <body>
     <h1>Temple Feedback Dashboard</h1>
-    <table border="1" width="100%" style="border-collapse: collapse;">
+    <input type="text" id="searchInput" placeholder="Search feedback..." onkeyup="filterTable()">
+    <table>
         <thead>
             <tr>
-                <th>Unique ID</th>
-                <th>Timestamp</th>
-                <th>Name</th>
-                <th>Mobile</th>
-                <th>Feedback</th>
-                <th>Status</th>
+                <th onclick="sortTable(0)">Unique ID</th>
+                <th onclick="sortTable(1)">Timestamp</th>
+                <th onclick="sortTable(2)">Name</th>
+                <th onclick="sortTable(3)">Mobile</th>
+                <th onclick="sortTable(4)">Feedback</th>
+                <th onclick="sortTable(5)">Status</th>
                 <th>Action</th>
             </tr>
         </thead>
-        <tbody id="feedbackContainer"> 
-            <!-- Data will be inserted here -->
-        </tbody>
+        <tbody id="feedbackContainer"></tbody>
     </table>
-
-    <!-- ✅ Fix: Add this line to load script.js -->
-    <script src="https://himusoftech.github.io/FMS/script.js"></script>
+    <script src="https://himusoftech.github.io/FMS/js/script.js"></script>
 </body>
 </html>
