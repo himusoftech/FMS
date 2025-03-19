@@ -3,122 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Temple Feedback Dashboard</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <title>Feedback Dashboard</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
-            padding: 10px;
-        }
-        h1 {
-            color: #222;
+            padding: 20px;
+            background-color: #f9f9f9;
         }
         table {
             width: 100%;
             border-collapse: collapse;
+            background: white;
         }
         th, td {
+            border: 1px solid #ddd;
             padding: 10px;
             text-align: left;
-            border: 1px solid #ddd;
         }
         th {
             background-color: #4CAF50;
             color: white;
-        }
-        input {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 10px;
-            border: 1px solid #ddd;
-        }
-        button {
-            padding: 5px 10px;
-            background-color: #007bff;
-            color: white;
-            border: none;
             cursor: pointer;
         }
-        button:hover {
-            background-color: #0056b3;
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        input {
+            margin-bottom: 10px;
+            padding: 8px;
+            width: 100%;
         }
     </style>
 </head>
 <body>
     <h1>Temple Feedback Dashboard</h1>
-    <input type="text" id="searchInput" placeholder="Search feedback...">
-    <table id="feedbackTable">
+    <input type="text" id="searchInput" placeholder="Search feedback..." onkeyup="filterTable()">
+    <table>
         <thead>
             <tr>
-                <th>Unique ID</th>
-                <th>Timestamp</th>
-                <th>Name</th>
-                <th>Mobile</th>
-                <th>Feedback</th>
-                <th>Status</th>
+                <th onclick="sortTable(0)">Unique ID</th>
+                <th onclick="sortTable(1)">Timestamp</th>
+                <th onclick="sortTable(2)">Name</th>
+                <th onclick="sortTable(3)">Mobile</th>
+                <th onclick="sortTable(4)">Feedback</th>
+                <th onclick="sortTable(5)">Status</th>
                 <th>Action</th>
             </tr>
         </thead>
-        <tbody id="feedbackContainer">
-            <!-- Data will be inserted here -->
-        </tbody>
+        <tbody id="feedbackContainer"></tbody>
     </table>
-    
-    <script>
-        async function fetchFeedback() {
-            try {
-                let response = await fetch("https://script.google.com/macros/s/AKfycby1yrnBkSJST2HtBQUzool4XDOaA3m4rOp2bvd0XnzvxmLpDB7a-Fx3S0tVLeWerjoY/exec");
-                let data = await response.json();
-                let tableBody = document.getElementById("feedbackContainer");
-                let tableHTML = "";
-                
-                data.forEach(row => {
-                    tableHTML += `<tr>
-                        <td>${row.uniqueID || "N/A"}</td>
-                        <td>${row.timestamp || "N/A"}</td>
-                        <td>${row.name || "N/A"}</td>
-                        <td>${row.mobile || "N/A"}</td>
-                        <td>${row.feedback || "N/A"}</td>
-                        <td id="status-${row.uniqueID}">${row.status || "N/A"}</td>
-                        <td><button onclick="updateStatus('${row.uniqueID}')">Resolve</button></td>
-                    </tr>`;
-                });
-                tableBody.innerHTML = tableHTML;
-                $("#feedbackTable").DataTable();
-            } catch (error) {
-                console.error("Error fetching data:", error);
-            }
-        }
-
-        async function updateStatus(uniqueID) {
-            try {
-                let response = await fetch("https://script.google.com/macros/s/YOUR_DEPLOYED_SCRIPT_URL_HERE", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ uniqueID: uniqueID, status: "Resolved" })
-                });
-                
-                if (response.ok) {
-                    document.getElementById(`status-${uniqueID}`).innerText = "Resolved";
-                    alert("Status updated successfully!");
-                } else {
-                    alert("Failed to update status.");
-                }
-            } catch (error) {
-                console.error("Error updating status:", error);
-            }
-        }
-        
-        document.addEventListener("DOMContentLoaded", fetchFeedback);
-        document.getElementById("searchInput").addEventListener("keyup", function () {
-            let value = this.value.toLowerCase();
-            $("#feedbackTable tbody tr").filter(function () {
-                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-            });
-        });
-    </script>
+    <script src="https://himusoftech.github.io/FMS/js/script.js"></script>
 </body>
 </html>
