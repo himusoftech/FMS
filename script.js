@@ -1,39 +1,63 @@
 async function fetchFeedback() {
-    console.log("🔄 Fetching data from API...");
+    console.log("🔄 Fetching feedback...");
 
     try {
         let response = await fetch("https://script.google.com/macros/s/AKfycby1yrnBkSJST2HtBQUzool4XDOaA3m4rOp2bvd0XnzvxmLpDB7a-Fx3S0tVLeWerjoY/exec");
-        console.log("📩 Response status:", response.status);
-
-        if (!response.ok) throw new Error("Server responded with status: " + response.status);
-
         let data = await response.json();
+        
         console.log("✅ Data received:", data);
-
         let tableBody = document.getElementById("feedbackContainer");
-        if (!tableBody) {
-            console.error("❌ Table container not found!");
-            return;
-        }
+        tableBody.innerHTML = "";
 
-        let tableHTML = data.map(row => `
-            <tr>
-                <td>${row.uniqueID || "N/A"}</td>
-                <td>${row.timestamp || "N/A"}</td>
-                <td>${row.name || "N/A"}</td>
-                <td>${row.mobile ? row.mobile.toString() : "N/A"}</td>
-                <td>${row.feedback || "N/A"}</td>
-                <td>${row.status || "N/A"}</td>
-                <td><button onclick="updateStatus('${row.uniqueID}', 'Resolved')">Resolve</button></td>
-            </tr>
-        `).join('');
-
-        tableBody.innerHTML = tableHTML;
-        console.log("✅ Table updated with API data.");
+        data.forEach(row => {
+            let newRow = `<tr>
+                <td>${row.uniqueID}</td>
+                <td>${row.timestamp}</td>
+                <td>${row.name}</td>
+                <td>${row.mobile}</td>
+                <td>${row.feedback}</td>
+                <td>${row.status}</td>
+                <td><button onclick="updateStatus('${row.uniqueID}')">Resolve</button></td>
+            </tr>`;
+            tableBody.innerHTML += newRow;
+        });
     } catch (error) {
-        console.error("❌ Fetch error:", error);
-        document.getElementById("feedbackContainer").innerHTML = "<tr><td colspan='7'>⚠️ Failed to load data.</td></tr>";
+        console.error("❌ Error fetching feedback:", error);
     }
 }
 
 document.addEventListener("DOMContentLoaded", fetchFeedback);
+
+async function updateStatus(uniqueID) {
+    console.log(`🛠 Updating status for: ${uniqueID}`);
+
+    try {
+        let response = await fetch("https://script.google.com/macros/s/YOUR_SCRIPT_ID_HERE/exec", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ uniqueID, status: "Resolved" })
+        });
+
+        let result = await response.json();
+        console.log("✅ Update Response:", result);
+        fetchFeedback(); // Refresh table after update
+    } catch (error) {
+        console.error("❌ Error updating status:", error);
+    }
+}
+
+function sortTable(columnIndex) {
+    let table = document.querySelector("table tbody");
+    let rows = Array.from(table.rows);
+    let sortedRows = rows.sort((a, b) => a.cells[columnIndex].innerText.localeCompare(b.cells[columnIndex].innerText));
+    table.innerHTML = "";
+    sortedRows.forEach(row => table.appendChild(row));
+}
+
+function filterTable() {
+    let input = document.getElementById("searchInput").value.toLowerCase();
+    let rows = document.querySelectorAll("#feedbackContainer tr");
+    rows.forEach(row => {
+        row.style.display = row.innerText.toLowerCase().includes(input) ? "" : "none";
+    });
+}
