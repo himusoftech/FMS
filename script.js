@@ -1,8 +1,11 @@
 async function fetchFeedback() {
   try {
+    console.log("🔄 Fetching feedback...");
+    
     let response = await fetch("https://script.google.com/macros/s/AKfycby1yrnBkSJST2HtBQUzool4XDOaA3m4rOp2bvd0XnzvxmLpDB7a-Fx3S0tVLeWerjoY/exec");
+    console.log("📩 Response status:", response.status);
+    
     let data = await response.json();
-
     console.log("✅ Data Received:", data);
 
     let tableBody = document.getElementById("feedbackContainer");
@@ -20,12 +23,12 @@ async function fetchFeedback() {
     let tableHTML = "";
     data.forEach(row => {
       tableHTML += `<tr>
-        <td>${row.uniqueID}</td>
-        <td>${row.timestamp}</td>
-        <td>${row.name}</td>
-        <td>${row.mobile}</td>
-        <td>${row.feedback}</td>
-        <td>${row.status}</td>
+        <td>${row.uniqueID || "N/A"}</td>
+        <td>${row.timestamp || "N/A"}</td>
+        <td>${row.name || "N/A"}</td>
+        <td>${row.mobile || "N/A"}</td>
+        <td>${row.feedback || "N/A"}</td>
+        <td>${row.status || "N/A"}</td>
         <td>
           <button onclick="updateStatus('${row.uniqueID}', 'Resolved')">Resolve</button>
         </td>
@@ -39,21 +42,5 @@ async function fetchFeedback() {
   }
 }
 
-// Function to update feedback status
-async function updateStatus(feedbackID, newStatus) {
-  let response = await fetch("https://script.google.com/macros/s/AKfycby1yrnBkSJST2HtBQUzool4XDOaA3m4rOp2bvd0XnzvxmLpDB7a-Fx3S0tVLeWerjoY/exec", {
-    method: "POST",
-    body: JSON.stringify({ uniqueID: feedbackID, action: "updateStatus", status: newStatus }),
-    headers: { "Content-Type": "application/json" }
-  });
-
-  let result = await response.json();
-  if (result.success) {
-    alert("✅ Status updated!");
-    fetchFeedback(); // Refresh data
-  } else {
-    alert("❌ Error updating status!");
-  }
-}
 
 window.onload = fetchFeedback;
