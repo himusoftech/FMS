@@ -4,65 +4,45 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Temple Feedback Dashboard</title>
-
-    <!-- DataTables CSS for Sorting & Filtering -->
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
-            background-color: #f4f4f4;
-        }
-        h1 {
-            text-align: center;
-            color: #333;
-        }
-        #searchInput {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
         }
         table {
             width: 100%;
             border-collapse: collapse;
-            background: white;
         }
         th, td {
-            padding: 10px;
+            border: 1px solid #ddd;
+            padding: 8px;
             text-align: left;
-            border-bottom: 1px solid #ddd;
         }
         th {
-            background-color: #4CAF50;
+            background-color: green;
             color: white;
             cursor: pointer;
-        }
-        tr:hover {
-            background-color: #f1f1f1;
         }
         button {
-            background-color: #28a745;
+            padding: 5px 10px;
+            background-color: blue;
             color: white;
             border: none;
-            padding: 5px 10px;
             cursor: pointer;
-            border-radius: 4px;
         }
-        button:disabled {
-            background-color: gray;
-            cursor: not-allowed;
+        button:hover {
+            background-color: darkblue;
         }
     </style>
 </head>
 <body>
-
     <h1>Temple Feedback Dashboard</h1>
-    <input type="text" id="searchInput" placeholder="Search feedback...">
-
-    <table id="feedbackTable" class="display">
+    <input type="text" id="search" placeholder="Search feedback..." onkeyup="filterTable()">
+    <table id="feedbackTable">
         <thead>
             <tr>
                 <th>Unique ID</th>
@@ -75,16 +55,8 @@
             </tr>
         </thead>
         <tbody id="feedbackContainer">
-            <!-- Data will be dynamically inserted here -->
         </tbody>
     </table>
-
-    <!-- jQuery and DataTables JS -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-
-    <!-- External JavaScript File -->
     <script src="FMS/script.js"></script>
-
 </body>
 </html>
