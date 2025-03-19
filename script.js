@@ -1,63 +1,79 @@
 async function fetchFeedback() {
-    console.log("🔄 Fetching feedback...");
+    console.log("🔄 Fetching feedback data...");
 
     try {
         let response = await fetch("https://script.google.com/macros/s/AKfycby1yrnBkSJST2HtBQUzool4XDOaA3m4rOp2bvd0XnzvxmLpDB7a-Fx3S0tVLeWerjoY/exec");
         let data = await response.json();
-        
-        console.log("✅ Data received:", data);
-        let tableBody = document.getElementById("feedbackContainer");
-        tableBody.innerHTML = "";
 
+        let tableBody = document.getElementById("feedbackContainer");
+        if (!tableBody) {
+            console.error("❌ Table container missing.");
+            return;
+        }
+
+        if (!Array.isArray(data)) {
+            console.error("❌ Data format issue:", data);
+            tableBody.innerHTML = "<tr><td colspan='7'>⚠️ No valid data found.</td></tr>";
+            return;
+        }
+
+        // Populate table
+        let tableHTML = "";
         data.forEach(row => {
-            let newRow = `<tr>
-                <td>${row.uniqueID}</td>
-                <td>${row.timestamp}</td>
-                <td>${row.name}</td>
-                <td>${row.mobile}</td>
-                <td>${row.feedback}</td>
-                <td>${row.status}</td>
-                <td><button onclick="updateStatus('${row.uniqueID}')">Resolve</button></td>
+            tableHTML += `<tr>
+                <td>${row.uniqueID || "N/A"}</td>
+                <td>${row.timestamp || "N/A"}</td>
+                <td>${row.name || "N/A"}</td>
+                <td>${row.mobile || "N/A"}</td>
+                <td>${row.feedback || "N/A"}</td>
+                <td class="status">${row.status || "N/A"}</td>
+                <td><button class="resolveBtn" data-id="${row.uniqueID}">Resolve</button></td>
             </tr>`;
-            tableBody.innerHTML += newRow;
         });
+
+        tableBody.innerHTML = tableHTML;
+
+        // Initialize DataTables for sorting and filtering
+        $("#feedbackTable").DataTable();
+
+        // Attach event listeners to resolve buttons
+        document.querySelectorAll(".resolveBtn").forEach(button => {
+            button.addEventListener("click", function () {
+                let uniqueID = this.getAttribute("data-id");
+                updateStatus(uniqueID, "Resolved", this);
+            });
+        });
+
+        console.log("✅ Table updated successfully.");
     } catch (error) {
-        console.error("❌ Error fetching feedback:", error);
+        console.error("❌ Error fetching data:", error);
+        document.getElementById("feedbackContainer").innerHTML = "<tr><td colspan='7'>⚠️ Failed to load data.</td></tr>";
     }
 }
 
-document.addEventListener("DOMContentLoaded", fetchFeedback);
-
-async function updateStatus(uniqueID) {
-    console.log(`🛠 Updating status for: ${uniqueID}`);
+async function updateStatus(uniqueID, newStatus, buttonElement) {
+    console.log(`🔄 Updating status for ${uniqueID}...`);
 
     try {
-        let response = await fetch("https://script.google.com/macros/s/YOUR_SCRIPT_ID_HERE/exec", {
+        let response = await fetch("https://script.google.com/macros/s/AKfycby1yrnBkSJST2HtBQUzool4XDOaA3m4rOp2bvd0XnzvxmLpDB7a-Fx3S0tVLeWerjoY/exec", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ uniqueID, status: "Resolved" })
+            body: JSON.stringify({ uniqueID, status: newStatus })
         });
 
         let result = await response.json();
-        console.log("✅ Update Response:", result);
-        fetchFeedback(); // Refresh table after update
+        if (result.success) {
+            console.log(`✅ Status updated for ${uniqueID}`);
+            buttonElement.closest("tr").querySelector(".status").textContent = newStatus;
+            buttonElement.disabled = true;
+            buttonElement.textContent = "Resolved";
+        } else {
+            console.error("❌ Failed to update status:", result.message);
+        }
     } catch (error) {
         console.error("❌ Error updating status:", error);
     }
 }
 
-function sortTable(columnIndex) {
-    let table = document.querySelector("table tbody");
-    let rows = Array.from(table.rows);
-    let sortedRows = rows.sort((a, b) => a.cells[columnIndex].innerText.localeCompare(b.cells[columnIndex].innerText));
-    table.innerHTML = "";
-    sortedRows.forEach(row => table.appendChild(row));
-}
-
-function filterTable() {
-    let input = document.getElementById("searchInput").value.toLowerCase();
-    let rows = document.querySelectorAll("#feedbackContainer tr");
-    rows.forEach(row => {
-        row.style.display = row.innerText.toLowerCase().includes(input) ? "" : "none";
-    });
-}
+// Run fetchFeedback on page load
+document.addEventListener("DOMContentLoaded", fetchFeedback);
