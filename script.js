@@ -4,8 +4,13 @@ async function fetchFeedback() {
         if (!response.ok) throw new Error("Network response was not ok");
         let data = await response.json();
 
-        let tableBody = document.getElementById("feedbackContainer");
-        tableBody.innerHTML = ""; // Clear previous data
+        let tableBody = document.getElementById("feedbackContainer");  
+        tableBody.innerHTML = ""; // Clear old data
+
+        if (data.length === 0) {
+            tableBody.innerHTML = "<tr><td colspan='7'>No feedback available.</td></tr>";
+            return;
+        }
 
         data.forEach(row => {
             let tr = document.createElement("tr");
@@ -34,3 +39,6 @@ async function fetchFeedback() {
         document.getElementById("feedbackContainer").innerHTML = "<tr><td colspan='7'>Failed to load data.</td></tr>";
     }
 }
+
+// Run fetchFeedback when the page loads
+document.addEventListener("DOMContentLoaded", fetchFeedback);
