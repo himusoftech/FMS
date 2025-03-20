@@ -42,6 +42,11 @@ function populateTable(feedbackData) {
                     <option value="Resolved" ${feedback["Status"] === "Resolved" ? "selected" : ""}>Resolved</option>
                 </select>
             </td>
+             <td>
+                <input type="text" id="resolution-${feedback["Unique ID"]}" 
+                       value="${feedback["Resolution"] || ""}" 
+                       ${feedback["Status"] === "Resolved" ? "" : "disabled"}>
+            </td>
             <td>
                 <button class="btn btn-primary btn-sm" onclick="updateFeedback('${feedback["Unique ID"]}')">Update</button>
             </td>
@@ -49,6 +54,18 @@ function populateTable(feedbackData) {
 
         tableBody.appendChild(row);
     });
+}
+
+// Enable/Disable resolution input based on status selection
+function toggleResolutionField(uin) {
+    let statusField = document.getElementById(`status-${uin}`);
+    let resolutionField = document.getElementById(`resolution-${uin}`);
+
+    if (statusField.value === "Resolved") {
+        resolutionField.removeAttribute("disabled");
+    } else {
+        resolutionField.setAttribute("disabled", "true");
+    }
 }
 
 
