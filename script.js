@@ -20,14 +20,14 @@ function populateTable(feedbackData) {
         let row = document.createElement("tr");
 
         row.innerHTML = `
-            <td>${feedback.uin}</td>
-            <td>${feedback.timestamp}</td>
-            <td>${feedback.name}</td>
-            <td>${feedback.mobile}</td>
-            <td>${feedback.suggestions}</td>
-            <td>${feedback.email}</td>
+            <td>${feedback["Unique ID"] || "N/A"}</td>
+            <td>${feedback["Time Stamp"] || "N/A"}</td>
+            <td>${feedback["Name"] || "N/A"}</td>
+            <td>${feedback["Mobile Number"] || "N/A"}</td>
+            <td>${feedback["Feedback/Grievance"] || "N/A"}</td>
+            <td>${feedback["Email"] || "N/A"}</td>
             <td>
-                <select id="assign-${feedback.uin}">
+                <select id="assign-${feedback["Unique ID"]}">
                     <option value="">Assign</option>
                     <option value="Revanna">Revanna</option>
                     <option value="Gopinath">Gopinath</option>
@@ -36,14 +36,14 @@ function populateTable(feedbackData) {
                 </select>
             </td>
             <td>
-                <select id="status-${feedback.uin}">
-                    <option value="Pending" ${feedback.status === "Pending" ? "selected" : ""}>Pending</option>
-                    <option value="In Process" ${feedback.status === "In Process" ? "selected" : ""}>In Process</option>
-                    <option value="Resolved" ${feedback.status === "Resolved" ? "selected" : ""}>Resolved</option>
+                <select id="status-${feedback["Unique ID"]}">
+                    <option value="Pending" ${feedback["Status"] === "Pending" ? "selected" : ""}>Pending</option>
+                    <option value="In Process" ${feedback["Status"] === "In Process" ? "selected" : ""}>In Process</option>
+                    <option value="Resolved" ${feedback["Status"] === "Resolved" ? "selected" : ""}>Resolved</option>
                 </select>
             </td>
             <td>
-                <button class="btn btn-primary btn-sm" onclick="updateFeedback('${feedback.uin}')">Update</button>
+                <button class="btn btn-primary btn-sm" onclick="updateFeedback('${feedback["Unique ID"]}')">Update</button>
             </td>
         `;
 
