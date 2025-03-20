@@ -36,25 +36,27 @@ async function fetchFeedback() {
 
 async function updateStatus(uniqueID) {
     let selectedStatus = document.getElementById(`status-${uniqueID}`).value;
+    
     try {
         let response = await fetch("https://script.google.com/macros/s/AKfycbw85WvcTBnVMHcwwPHVkH900vEDKV66GqAvHNkNGbm8KtW_6lVvBR4Oma7hLKKNN3jVqQ/exec", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ uniqueID, status: selectedStatus })
+            body: JSON.stringify({ uniqueID, status: selectedStatus }),
         });
 
+        if (!response.ok) throw new Error(`HTTP Error! Status: ${response.status}`);
+
         let result = await response.json();
+        console.log("Response:", result);  // Debugging log
+        
         if (result.success) {
-            alert("Status updated successfully!");
-            fetchFeedback(); // Reload data
+            alert("✅ Status updated successfully!");
+            fetchFeedback(); // Reload feedback data
         } else {
-            alert("Failed to update status. Try again.");
+            alert("⚠️ Failed to update status. Try again.");
         }
     } catch (error) {
-        console.error("Error updating status:", error);
-        alert("Error updating status.");
+        console.error("🚨 Error updating status:", error);
+        alert("❌ Network error. Could not update status.");
     }
 }
-
-// Load feedback data when page loads
-document.addEventListener("DOMContentLoaded", fetchFeedback);
