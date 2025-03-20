@@ -1,71 +1,87 @@
-document.addEventListener("DOMContentLoaded", function () {
-    fetchFeedback();
-});
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbw2Ob9THl7wkuMvrZak7PvPPviLLUJcOaGSbt2msbwG4B3XmRTl8fKWcNuRKq7EJXIUjA/exec"; // Replace with your actual URL
 
+// Fetch feedback from Google Sheets and populate the table
 async function fetchFeedback() {
-    const response = await fetch("AKfycbw2Ob9THl7wkuMvrZak7PvPPviLLUJcOaGSbt2msbwG4B3XmRTl8fKWcNuRKq7EJXIUjA");
-    const data = await response.json();
+    try {
+        let response = await fetch(WEB_APP_URL);
+        let data = await response.json();
+        populateTable(data);
+    } catch (error) {
+        console.error("Error fetching feedback:", error);
+    }
+}
 
-    const tableBody = document.getElementById("feedbackContainer");
-    tableBody.innerHTML = "";
+// Populate table with fetched feedback data
+function populateTable(feedbackData) {
+    let tableBody = document.getElementById("feedbackContainer");
+    tableBody.innerHTML = ""; // Clear existing rows
 
-    data.forEach(feedback => {
-        const row = document.createElement("tr");
+    feedbackData.forEach(feedback => {
+        let row = document.createElement("tr");
 
         row.innerHTML = `
-            <td>${feedback["Unique ID"]}</td>
-            <td>${feedback["Timestamp"]}</td>
-            <td>${feedback["Name"]}</td>
-            <td>${feedback["Mobile Number"]}</td>
-            <td>${feedback["Feedback/Grievance"]}</td>
-            <td>${feedback["Email"]}</td>
+            <td>${feedback.uin}</td>
+            <td>${feedback.timestamp}</td>
+            <td>${feedback.name}</td>
+            <td>${feedback.mobile}</td>
+            <td>${feedback.suggestions}</td>
+            <td>${feedback.email}</td>
             <td>
-                <select class="status-dropdown">
-                    <option value="Pending" ${feedback["Status"] === "Pending" ? "selected" : ""}>Pending</option>
-                    <option value="In Process" ${feedback["Status"] === "In Process" ? "selected" : ""}>In Process</option>
-                    <option value="Resolved" ${feedback["Status"] === "Resolved" ? "selected" : ""}>Resolved</option>
+                <select id="assign-${feedback.uin}">
+                    <option value="">Assign</option>
+                    <option value="Person A">Revanna</option>
+                    <option value="Person B">Gopinath</option>
+                    <option value="Person A">Lokesh</option>
+                    <option value="Person B">Ragvendra</option>
                 </select>
             </td>
             <td>
-                <select class="assigned-dropdown">
-                    <option value="">Assign to...</option>
-                     <option value="Revanna" ${feedback["Assigned To"] === "Revanna" ? "selected" : ""}>Revanna</option>
-                    <option value="Gopinath" ${feedback["Assigned To"] === "Gopinath" ? "selected" : ""}>Gopinath</option>
-                    <option value="Lokesh" ${feedback["Assigned To"] === "Lokesh" ? "selected" : ""}>Lokesh</option>
-                    <option value="Ragvendra" ${feedback["Assigned To"] === "Ragvendra" ? "selected" : ""}>Ragvendra</option>
+                <select id="status-${feedback.uin}">
+                    <option value="Pending" ${feedback.status === "Pending" ? "selected" : ""}>Pending</option>
+                    <option value="In Process" ${feedback.status === "In Process" ? "selected" : ""}>In Process</option>
+                    <option value="Resolved" ${feedback.status === "Resolved" ? "selected" : ""}>Resolved</option>
                 </select>
             </td>
-            <td><input type="text" class="resolution-input" value="${feedback["Resolution"] || ""}"></td>
-            <td><button class="update-btn btn btn-primary">Update</button></td>
+            <td>
+                <button class="btn btn-primary btn-sm" onclick="updateFeedback('${feedback.uin}')">Update</button>
+            </td>
         `;
-
-        row.querySelector(".assigned-dropdown").addEventListener("change", function () {
-            row.querySelector(".status-dropdown").value = "In Process";
-        });
-
-        row.querySelector(".update-btn").addEventListener("click", async function () {
-            const updatedFeedback = {
-                uniqueID: feedback["Unique ID"],
-                status: row.querySelector(".status-dropdown").value,
-                assignedTo: row.querySelector(".assigned-dropdown").value,
-                resolution: row.querySelector(".resolution-input").value
-            };
-
-            const response = await fetch("AKfycbw2Ob9THl7wkuMvrZak7PvPPviLLUJcOaGSbt2msbwG4B3XmRTl8fKWcNuRKq7EJXIUjA", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(updatedFeedback)
-            });
-
-            const result = await response.json();
-            if (result.success) {
-                alert("Feedback updated successfully!");
-                fetchFeedback();
-            } else {
-                alert("Error updating feedback!");
-            }
-        });
 
         tableBody.appendChild(row);
     });
 }
+
+// Update feedback status in Google Sheets
+async function updateFeedback(uin) {
+    let assignedTo = document.getElementById(`assign-${uin}`).value;
+    let status = document.getElementById(`status-${uin}`).value;
+
+    if (!assignedTo) {
+        alert("Please assign a person before updating status.");
+        return;
+    }
+
+    try {
+        let response = await fetch(https://script.google.com/macros/s/AKfycbw2Ob9THl7wkuMvrZak7PvPPviLLUJcOaGSbt2msbwG4B3XmRTl8fKWcNuRKq7EJXIUjA/exec, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ uin, assignedTo, status })
+        });
+
+        let result = await response.json();
+        if (result.success) {
+            alert("Feedback updated successfully!");
+            fetchFeedback(); // Refresh the table
+        } else {
+            alert("Error updating feedback!");
+        }
+    } catch (error) {
+        console.error("Error updating feedback:", error);
+    }
+}
+
+// Fetch feedback when the page loads
+window.onload = fetchFeedback;
+
+
+
