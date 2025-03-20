@@ -18,17 +18,24 @@ function populateTable(feedbackData) {
     tableBody.innerHTML = ""; // Clear existing rows
 
     feedbackData.forEach(feedback => {
+        let uniqueID = feedback["Unique ID"]; // Ensure unique ID exists
+
+        if (!uniqueID) {
+            console.error("Missing Unique ID:", feedback); // Debugging
+            return; // Skip if Unique ID is missing
+        }
+
         let row = document.createElement("tr");
 
         row.innerHTML = `
-            <td>${feedback["Unique ID"] || "N/A"}</td>
+            <td>${uniqueID}</td>
             <td>${feedback["Time Stamp"] || "N/A"}</td>
             <td>${feedback["Name"] || "N/A"}</td>
             <td>${feedback["Mobile Number"] || "N/A"}</td>
             <td>${feedback["Feedback/Grievance"] || "N/A"}</td>
             <td>${feedback["Email"] || "N/A"}</td>
             <td>
-                <select id="assign-${feedback["Unique ID"]}">
+                <select id="assign-${uniqueID}">
                     <option value="">Assign</option>
                     <option value="Revanna">Revanna</option>
                     <option value="Gopinath">Gopinath</option>
@@ -37,17 +44,17 @@ function populateTable(feedbackData) {
                 </select>
             </td>
             <td>
-                <select id="status-${feedback["Unique ID"]}">
+                <select id="status-${uniqueID}">
                     <option value="Pending" ${feedback["Status"] === "Pending" ? "selected" : ""}>Pending</option>
                     <option value="In Process" ${feedback["Status"] === "In Process" ? "selected" : ""}>In Process</option>
                     <option value="Resolved" ${feedback["Status"] === "Resolved" ? "selected" : ""}>Resolved</option>
                 </select>
             </td>
             <td>
-                <input type="text" id="resolution-${feedback["Unique ID"]}" value="${feedback["Resolution"] || ""}" placeholder="Enter resolution">
+                <input type="text" id="resolution-${uniqueID}" value="${feedback["Resolution"] || ""}" placeholder="Enter resolution">
             </td>
             <td>
-                <button class="btn btn-primary btn-sm" onclick="updateFeedback('${feedback["Unique ID"]}')">Update</button>
+                <button class="btn btn-primary btn-sm" onclick="updateFeedback('${uniqueID}')">Update</button>
             </td>
         `;
 
@@ -57,6 +64,12 @@ function populateTable(feedbackData) {
 
 // Update feedback status in Google Sheets
 async function updateFeedback(uin) {
+    if (!uin || uin === "undefined") {
+        console.error("Error: Unique ID is undefined.");
+        alert("Error: Invalid Unique ID. Please refresh the page.");
+        return;
+    }
+
     let assignedTo = document.getElementById(`assign-${uin}`).value;
     let status = document.getElementById(`status-${uin}`).value;
     let resolution = document.getElementById(`resolution-${uin}`).value;
@@ -67,7 +80,7 @@ async function updateFeedback(uin) {
     }
 
     try {
-        let response = await fetch(WEB_APP_URL, { // ✅ FIXED fetch syntax
+        let response = await fetch(WEB_APP_URL, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ uin, assignedTo, status, resolution })
@@ -84,6 +97,3 @@ async function updateFeedback(uin) {
         console.error("Error updating feedback:", error);
     }
 }
-
-// Load feedback when the page loads
-document.addEventListener("DOMContentLoaded", fetchFeedback);
