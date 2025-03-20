@@ -34,6 +34,8 @@ function populateTable(feedbackData) {
             <td>${feedback["Mobile Number"] || "N/A"}</td>
             <td>${feedback["Feedback/Grievance"] || "N/A"}</td>
             <td>${feedback["Email"] || "N/A"}</td>
+
+            <!-- Unique IDs added dynamically -->
             <td>
                 <select id="assign-${uniqueID}">
                     <option value="">Assign</option>
