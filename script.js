@@ -29,11 +29,10 @@ async function fetchFeedback() {
             <td>
                 <select class="assigned-dropdown">
                     <option value="">Assign to...</option>
-                    <option value="Revanna" ${feedback["Assigned To"] === "Revanna" ? "selected" : ""}>Revanna</option>
+                     <option value="Revanna" ${feedback["Assigned To"] === "Revanna" ? "selected" : ""}>Revanna</option>
                     <option value="Gopinath" ${feedback["Assigned To"] === "Gopinath" ? "selected" : ""}>Gopinath</option>
                     <option value="Lokesh" ${feedback["Assigned To"] === "Lokesh" ? "selected" : ""}>Lokesh</option>
                     <option value="Ragvendra" ${feedback["Assigned To"] === "Ragvendra" ? "selected" : ""}>Ragvendra</option>
-
                 </select>
             </td>
             <td><input type="text" class="resolution-input" value="${feedback["Resolution"] || ""}"></td>
