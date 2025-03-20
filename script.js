@@ -73,17 +73,23 @@ function toggleResolutionField(uin) {
 async function updateFeedback(uin) {
     let assignedTo = document.getElementById(`assign-${uin}`).value;
     let status = document.getElementById(`status-${uin}`).value;
+    let resolution = document.getElementById(`resolution-${uin}`).value;
 
     if (!assignedTo) {
         alert("Please assign a person before updating status.");
         return;
     }
 
+    if (status === "Resolved" && !resolution) {
+        alert("Please enter a resolution before marking as Resolved.");
+        return;
+    }
+
     try {
-        let response = await fetch(WEB_APP_URL, {  // ✅ Use the defined constant
+        let response = await fetch(WEB_APP_URL, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ uin, assignedTo, status })
+            body: JSON.stringify({ uin, assignedTo, status, resolution })
         });
 
         let result = await response.json();
