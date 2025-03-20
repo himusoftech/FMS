@@ -29,10 +29,10 @@ function populateTable(feedbackData) {
             <td>
                 <select id="assign-${feedback.uin}">
                     <option value="">Assign</option>
-                    <option value="Person A">Revanna</option>
-                    <option value="Person B">Gopinath</option>
-                    <option value="Person A">Lokesh</option>
-                    <option value="Person B">Ragvendra</option>
+                    <option value="Revanna">Revanna</option>
+                    <option value="Gopinath">Gopinath</option>
+                    <option value="Lokesh">Lokesh</option>
+                    <option value="Ragvendra">Ragvendra</option>
                 </select>
             </td>
             <td>
@@ -62,7 +62,7 @@ async function updateFeedback(uin) {
     }
 
     try {
-        let response = await fetch(https://script.google.com/macros/s/AKfycbw2Ob9THl7wkuMvrZak7PvPPviLLUJcOaGSbt2msbwG4B3XmRTl8fKWcNuRKq7EJXIUjA/exec, {
+        let response = await fetch(WEB_APP_URL, { // FIXED SYNTAX ERROR
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ uin, assignedTo, status })
@@ -82,6 +82,3 @@ async function updateFeedback(uin) {
 
 // Fetch feedback when the page loads
 window.onload = fetchFeedback;
-
-
-
