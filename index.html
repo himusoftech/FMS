@@ -13,26 +13,34 @@
             let rows = Array.from(table.getElementsByTagName("tr"));
 
             let sortedRows = rows.sort((a, b) => {
-                let aText = a.cells[columnIndex]?.innerText.trim();
-                let bText = b.cells[columnIndex]?.innerText.trim();
+                let aCell = a.cells[columnIndex]?.innerText.trim() || "";
+                let bCell = b.cells[columnIndex]?.innerText.trim() || "";
 
-                // Handle date sorting
-                if (!isNaN(Date.parse(aText)) && !isNaN(Date.parse(bText))) {
-                    return new Date(aText) - new Date(bText);
+                if (!isNaN(Date.parse(aCell)) && !isNaN(Date.parse(bCell))) {
+                    return new Date(aCell) - new Date(bCell);
                 }
-                return aText.localeCompare(bText);
+                return aCell.localeCompare(bCell);
             });
 
-            // Remove old rows and append sorted rows
-            table.innerHTML = "";
+            table.innerHTML = ""; // Clear existing rows
             sortedRows.forEach(row => table.appendChild(row));
+        }
+
+        function filterTable() {
+            let input = document.getElementById("searchInput").value.toLowerCase();
+            let rows = document.getElementById("feedbackContainer").getElementsByTagName("tr");
+
+            Array.from(rows).forEach(row => {
+                let text = row.innerText.toLowerCase();
+                row.style.display = text.includes(input) ? "" : "none";
+            });
         }
     </script>
 </head>
 <body>
     <div class="container mt-4">
         <h1 class="mb-3">Temple Feedback Dashboard</h1>
-        <input type="text" id="searchInput" class="form-control mb-3" placeholder="Search feedback...">
+        <input type="text" id="searchInput" class="form-control mb-3" placeholder="Search feedback..." onkeyup="filterTable()">
         <table class="table table-bordered table-striped">
             <thead>
                 <tr class="table-success">
