@@ -5,6 +5,7 @@ async function fetchFeedback() {
     try {
         let response = await fetch(WEB_APP_URL);
         let data = await response.json();
+         console.log("Fetched Data:", data);
         populateTable(data);
     } catch (error) {
         console.error("Error fetching feedback:", error);
@@ -62,7 +63,7 @@ async function updateFeedback(uin) {
     }
 
     try {
-        let response = await fetch(WEB_APP_URL), { // FIXED SYNTAX ERROR
+        let response = await fetch(WEB_APP_URL, {  // ✅ Use the defined constant
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ uin, assignedTo, status })
@@ -79,6 +80,3 @@ async function updateFeedback(uin) {
         console.error("Error updating feedback:", error);
     }
 }
-
-// Fetch feedback when the page loads
-window.onload = fetchFeedback;
