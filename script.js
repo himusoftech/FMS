@@ -5,12 +5,13 @@ async function fetchFeedback() {
     try {
         let response = await fetch(WEB_APP_URL);
         let data = await response.json();
-         console.log("Fetched Data:", data);
+        console.log("Fetched Data:", data);
         populateTable(data);
     } catch (error) {
         console.error("Error fetching feedback:", error);
     }
 }
+
 // Populate table with fetched feedback data
 function populateTable(feedbackData) {
     let tableBody = document.getElementById("feedbackContainer");
@@ -29,10 +30,10 @@ function populateTable(feedbackData) {
             <td>
                 <select id="assign-${feedback["Unique ID"]}">
                     <option value="">Assign</option>
-                    <option value="Revanna" ${feedback["Assigned To"] === "Revanna" ? "selected" : ""}>Revanna</option>
-                    <option value="Gopinath" ${feedback["Assigned To"] === "Gopinath" ? "selected" : ""}>Gopinath</option>
-                    <option value="Lokesh" ${feedback["Assigned To"] === "Lokesh" ? "selected" : ""}>Lokesh</option>
-                    <option value="Ragvendra" ${feedback["Assigned To"] === "Ragvendra" ? "selected" : ""}>Ragvendra</option>
+                    <option value="Revanna">Revanna</option>
+                    <option value="Gopinath">Gopinath</option>
+                    <option value="Lokesh">Lokesh</option>
+                    <option value="Ragvendra">Ragvendra</option>
                 </select>
             </td>
             <td>
@@ -42,10 +43,8 @@ function populateTable(feedbackData) {
                     <option value="Resolved" ${feedback["Status"] === "Resolved" ? "selected" : ""}>Resolved</option>
                 </select>
             </td>
-             <td>
-                <input type="text" id="resolution-${feedback["Unique ID"]}" 
-                       value="${feedback["Resolution"] || ""}" 
-                       ${feedback["Status"] === "Resolved" ? "" : "disabled"}>
+            <td>
+                <input type="text" id="resolution-${feedback["Unique ID"]}" value="${feedback["Resolution"] || ""}" placeholder="Enter resolution">
             </td>
             <td>
                 <button class="btn btn-primary btn-sm" onclick="updateFeedback('${feedback["Unique ID"]}')">Update</button>
@@ -55,19 +54,6 @@ function populateTable(feedbackData) {
         tableBody.appendChild(row);
     });
 }
-
-// Enable/Disable resolution input based on status selection
-function toggleResolutionField(uin) {
-    let statusField = document.getElementById(`status-${uin}`);
-    let resolutionField = document.getElementById(`resolution-${uin}`);
-
-    if (statusField.value === "Resolved") {
-        resolutionField.removeAttribute("disabled");
-    } else {
-        resolutionField.setAttribute("disabled", "true");
-    }
-}
-
 
 // Update feedback status in Google Sheets
 async function updateFeedback(uin) {
@@ -80,13 +66,8 @@ async function updateFeedback(uin) {
         return;
     }
 
-    if (status === "Resolved" && !resolution) {
-        alert("Please enter a resolution before marking as Resolved.");
-        return;
-    }
-
     try {
-        let response = await fetch(WEB_APP_URL, {
+        let response = await fetch(WEB_APP_URL, { // ✅ FIXED fetch syntax
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ uin, assignedTo, status, resolution })
@@ -103,3 +84,6 @@ async function updateFeedback(uin) {
         console.error("Error updating feedback:", error);
     }
 }
+
+// Load feedback when the page loads
+document.addEventListener("DOMContentLoaded", fetchFeedback);
