@@ -1,9 +1,9 @@
 async function fetchFeedback() {
     try {
-        let response = await fetch("https://script.google.com/macros/s/AKfycbw85WvcTBnVMHcwwPHVkH900vEDKV66GqAvHNkNGbm8KtW_6lVvBR4Oma7hLKKNN3jVqQ/exec");
+        let response = await fetch("https://script.google.com/macros/s/AKfycbxd9DkgPgeD3IasHHg612ISVJSEVQq-oFqU5t3FEhEbGnGTVUSPGi5HusVZHqv0vBFm/exec");
         if (!response.ok) throw new Error("Network response was not ok");
         let data = await response.json();
-        
+
         let tableBody = document.getElementById("feedbackContainer");
         tableBody.innerHTML = ""; // Clear existing table data
 
@@ -23,7 +23,7 @@ async function fetchFeedback() {
                     </select>
                 </td>
                 <td>
-                    <button class="btn btn-primary" onclick="updateStatus('${row.uniqueID}')">Update</button>
+                    <button class="btn btn-primary" id="btn-${row.uniqueID}" onclick="updateStatus('${row.uniqueID}')">Update</button>
                 </td>
             `;
             tableBody.appendChild(tr);
@@ -36,27 +36,32 @@ async function fetchFeedback() {
 
 async function updateStatus(uniqueID) {
     let selectedStatus = document.getElementById(`status-${uniqueID}`).value;
-    
+    let button = document.getElementById(`btn-${uniqueID}`);
+
+    button.innerText = "Updating...";
+    button.disabled = true;
+
     try {
-        let response = await fetch("https://script.google.com/macros/s/AKfycbw85WvcTBnVMHcwwPHVkH900vEDKV66GqAvHNkNGbm8KtW_6lVvBR4Oma7hLKKNN3jVqQ/exec", {
+        let response = await fetch("https://script.google.com/macros/s/AKfycbxd9DkgPgeD3IasHHg612ISVJSEVQq-oFqU5t3FEhEbGnGTVUSPGi5HusVZHqv0vBFm/exec", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ uniqueID, status: selectedStatus }),
+            body: JSON.stringify({ uniqueID, status: selectedStatus })
         });
 
-        if (!response.ok) throw new Error(`HTTP Error! Status: ${response.status}`);
-
         let result = await response.json();
-        console.log("Response:", result);  // Debugging log
-        
         if (result.success) {
-            alert("✅ Status updated successfully!");
-            fetchFeedback(); // Reload feedback data
+            alert("Status updated successfully!");
+            fetchFeedback(); // Reload data
         } else {
-            alert("⚠️ Failed to update status. Try again.");
+            alert("Failed to update status. Try again.");
         }
     } catch (error) {
-        console.error("🚨 Error updating status:", error);
-        alert("❌ Network error. Could not update status.");
+        console.error("Error updating status:", error);
+        alert("Error updating status.");
+    } finally {
+        button.innerText = "Update";
+        button.disabled = false;
     }
 }
+
+document.addEventListener("DOMContentLoaded", fetchFeedback);
