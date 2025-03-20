@@ -11,7 +11,6 @@ async function fetchFeedback() {
         console.error("Error fetching feedback:", error);
     }
 }
-
 // Populate table with fetched feedback data
 function populateTable(feedbackData) {
     let tableBody = document.getElementById("feedbackContainer");
@@ -30,10 +29,10 @@ function populateTable(feedbackData) {
             <td>
                 <select id="assign-${feedback["Unique ID"]}">
                     <option value="">Assign</option>
-                    <option value="Revanna">Revanna</option>
-                    <option value="Gopinath">Gopinath</option>
-                    <option value="Lokesh">Lokesh</option>
-                    <option value="Ragvendra">Ragvendra</option>
+                    <option value="Revanna" ${feedback["Assigned To"] === "Revanna" ? "selected" : ""}>Revanna</option>
+                    <option value="Gopinath" ${feedback["Assigned To"] === "Gopinath" ? "selected" : ""}>Gopinath</option>
+                    <option value="Lokesh" ${feedback["Assigned To"] === "Lokesh" ? "selected" : ""}>Lokesh</option>
+                    <option value="Ragvendra" ${feedback["Assigned To"] === "Ragvendra" ? "selected" : ""}>Ragvendra</option>
                 </select>
             </td>
             <td>
@@ -51,6 +50,7 @@ function populateTable(feedbackData) {
         tableBody.appendChild(row);
     });
 }
+
 
 // Update feedback status in Google Sheets
 async function updateFeedback(uin) {
