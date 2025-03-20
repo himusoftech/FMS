@@ -49,19 +49,19 @@ async function updateStatus(uniqueID) {
         });
 
         let result = await response.json();
+        console.log("Server Response:", result); // Debugging
+
         if (result.success) {
             alert("Status updated successfully!");
-            fetchFeedback(); // Reload data
+            fetchFeedback(); // Reload table
         } else {
-            alert("Failed to update status. Try again.");
+            alert("Failed to update: " + result.error);
         }
     } catch (error) {
         console.error("Error updating status:", error);
-        alert("Error updating status.");
+        alert("Network error while updating.");
     } finally {
         button.innerText = "Update";
         button.disabled = false;
     }
 }
-
-document.addEventListener("DOMContentLoaded", fetchFeedback);
