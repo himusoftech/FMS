@@ -3,14 +3,9 @@ async function fetchFeedback() {
         let response = await fetch("https://script.google.com/macros/s/AKfycby1yrnBkSJST2HtBQUzool4XDOaA3m4rOp2bvd0XnzvxmLpDB7a-Fx3S0tVLeWerjoY/exec");
         if (!response.ok) throw new Error("Network response was not ok");
         let data = await response.json();
-
-        let tableBody = document.getElementById("feedbackContainer");  
-        tableBody.innerHTML = ""; // Clear old data
-
-        if (data.length === 0) {
-            tableBody.innerHTML = "<tr><td colspan='7'>No feedback available.</td></tr>";
-            return;
-        }
+        
+        let tableBody = document.getElementById("feedbackContainer");
+        tableBody.innerHTML = ""; // Clear existing table data
 
         data.forEach(row => {
             let tr = document.createElement("tr");
@@ -33,12 +28,33 @@ async function fetchFeedback() {
             `;
             tableBody.appendChild(tr);
         });
-
     } catch (error) {
         console.error("Error fetching data:", error);
         document.getElementById("feedbackContainer").innerHTML = "<tr><td colspan='7'>Failed to load data.</td></tr>";
     }
 }
 
-// Run fetchFeedback when the page loads
+async function updateStatus(uniqueID) {
+    let selectedStatus = document.getElementById(`status-${uniqueID}`).value;
+    try {
+        let response = await fetch("https://script.google.com/macros/s/AKfycby1yrnBkSJST2HtBQUzool4XDOaA3m4rOp2bvd0XnzvxmLpDB7a-Fx3S0tVLeWerjoY/exec", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ uniqueID, status: selectedStatus })
+        });
+
+        let result = await response.json();
+        if (result.success) {
+            alert("Status updated successfully!");
+            fetchFeedback(); // Reload data
+        } else {
+            alert("Failed to update status. Try again.");
+        }
+    } catch (error) {
+        console.error("Error updating status:", error);
+        alert("Error updating status.");
+    }
+}
+
+// Load feedback data when page loads
 document.addEventListener("DOMContentLoaded", fetchFeedback);
