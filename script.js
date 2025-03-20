@@ -62,7 +62,7 @@ async function updateFeedback(uin) {
     }
 
     try {
-        let response = await fetch(WEB_APP_URL, { // FIXED SYNTAX ERROR
+        let response = await fetch(WEB_APP_URL), { // FIXED SYNTAX ERROR
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ uin, assignedTo, status })
