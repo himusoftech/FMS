@@ -1,6 +1,6 @@
 async function fetchFeedback() {
     try {
-        let response = await fetch("https://script.google.com/macros/s/AKfycby1yrnBkSJST2HtBQUzool4XDOaA3m4rOp2bvd0XnzvxmLpDB7a-Fx3S0tVLeWerjoY/exec");
+        let response = await fetch("https://script.google.com/macros/s/AKfycbw85WvcTBnVMHcwwPHVkH900vEDKV66GqAvHNkNGbm8KtW_6lVvBR4Oma7hLKKNN3jVqQ/exec");
         if (!response.ok) throw new Error("Network response was not ok");
         let data = await response.json();
         
@@ -37,7 +37,7 @@ async function fetchFeedback() {
 async function updateStatus(uniqueID) {
     let selectedStatus = document.getElementById(`status-${uniqueID}`).value;
     try {
-        let response = await fetch("https://script.google.com/macros/s/AKfycby1yrnBkSJST2HtBQUzool4XDOaA3m4rOp2bvd0XnzvxmLpDB7a-Fx3S0tVLeWerjoY/exec", {
+        let response = await fetch("https://script.google.com/macros/s/AKfycbw85WvcTBnVMHcwwPHVkH900vEDKV66GqAvHNkNGbm8KtW_6lVvBR4Oma7hLKKNN3jVqQ/exec", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ uniqueID, status: selectedStatus })
