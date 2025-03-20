@@ -3,58 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Feedback Dashboard</title>
+    <title>Temple Feedback Dashboard</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <script defer src="./script.js"></script>
-
-    <script>
-        function sortTable(columnIndex) {
-            let table = document.getElementById("feedbackContainer");
-            let rows = Array.from(table.getElementsByTagName("tr"));
-
-            let sortedRows = rows.sort((a, b) => {
-                let aCell = a.cells[columnIndex]?.innerText.trim() || "";
-                let bCell = b.cells[columnIndex]?.innerText.trim() || "";
-
-                if (!isNaN(Date.parse(aCell)) && !isNaN(Date.parse(bCell))) {
-                    return new Date(aCell) - new Date(bCell);
-                }
-                return aCell.localeCompare(bCell);
-            });
-
-            table.innerHTML = ""; // Clear existing rows
-            sortedRows.forEach(row => table.appendChild(row));
-        }
-
-        function filterTable() {
-            let input = document.getElementById("searchInput").value.toLowerCase();
-            let rows = document.getElementById("feedbackContainer").getElementsByTagName("tr");
-
-            Array.from(rows).forEach(row => {
-                let text = row.innerText.toLowerCase();
-                row.style.display = text.includes(input) ? "" : "none";
-            });
-        }
-    </script>
 </head>
 <body>
     <div class="container mt-4">
-        <h1 class="mb-3">Temple Feedback Dashboard</h1>
-        <input type="text" id="searchInput" class="form-control mb-3" placeholder="Search feedback..." onkeyup="filterTable()">
+        <h1 class="mb-3 text-center">Temple Feedback Dashboard</h1>
+
+        <input type="text" id="searchInput" class="form-control mb-3" placeholder="Search feedback...">
+
         <table class="table table-bordered table-striped">
             <thead>
                 <tr class="table-success">
-                    <th onclick="sortTable(0)">Unique ID ⬍</th>
-                    <th onclick="sortTable(1)">Timestamp ⬍</th>
-                    <th onclick="sortTable(2)">Name ⬍</th>
-                    <th onclick="sortTable(3)">Mobile ⬍</th>
-                    <th onclick="sortTable(4)">Feedback ⬍</th>
-                    <th onclick="sortTable(5)">Status ⬍</th>
+                    <th>UIN</th>
+                    <th>Timestamp</th>
+                    <th>Name</th>
+                    <th>Mobile</th>
+                    <th>Suggestions/Grievances</th>
+                    <th>Email</th>
+                    <th>Status</th>
+                    <th>Assigned To</th>
+                    <th>Resolution</th>
                     <th>Action</th>
                 </tr>
             </thead>
             <tbody id="feedbackContainer">
-                <tr><td colspan="7">Loading data...</td></tr>
+                <tr><td colspan="10" class="text-center">Loading data...</td></tr>
             </tbody>
         </table>
     </div>
