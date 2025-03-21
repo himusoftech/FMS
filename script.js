@@ -35,7 +35,6 @@ function populateTable(feedbackData) {
             <td>${feedback["Feedback/Grievance"] || "N/A"}</td>
             <td>${feedback["Email"] || "N/A"}</td>
 
-            <!-- Unique IDs added dynamically -->
             <td>
                 <select id="assign-${uniqueID}">
                     <option value="">Assign</option>
@@ -99,3 +98,6 @@ async function updateFeedback(uin) {
         console.error("Error updating feedback:", error);
     }
 }
+
+// ✅ Ensure feedback data loads when the page opens
+document.addEventListener("DOMContentLoaded", fetchFeedback);
